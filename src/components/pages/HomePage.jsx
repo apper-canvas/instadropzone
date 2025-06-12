@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { toast } from 'react-toastify';
-import MainFeature from '../components/MainFeature';
-import { uploadFileService } from '../services';
+import SummaryStatsCard from '@/components/molecules/SummaryStatsCard';
+import FileUploadSection from '@/components/organisms/FileUploadSection';
+import ConfettiAnimation from '@/components/organisms/ConfettiAnimation';
+import { uploadFileService } from '@/services';
 
-function Home() {
+const HomePage = () => {
   const [files, setFiles] = useState([]);
   const [uploadSession, setUploadSession] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -79,10 +81,6 @@ function Home() {
     }
   };
 
-  const totalSize = files.reduce((sum, file) => sum + file.size, 0);
-  const completedFiles = files.filter(f => f.status === 'completed').length;
-  const overallProgress = files.length > 0 ? (completedFiles / files.length) * 100 : 0;
-
   return (
     <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 max-w-full overflow-hidden">
       <motion.div
@@ -102,44 +100,11 @@ function Home() {
 
         {/* Summary Stats */}
         {files.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 border border-primary/20"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-surface-900">{files.length}</div>
-                <div className="text-sm text-surface-600">Total Files</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-surface-900">
-                  {(totalSize / (1024 * 1024)).toFixed(1)}MB
-                </div>
-                <div className="text-sm text-surface-600">Total Size</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-primary">{overallProgress.toFixed(0)}%</div>
-                <div className="text-sm text-surface-600">Progress</div>
-              </div>
-            </div>
-            
-            {/* Overall Progress Bar */}
-            <div className="mt-4">
-              <div className="w-full bg-surface-200 rounded-full h-2">
-                <motion.div
-                  initial={{ width: 0 }}
-                  animate={{ width: `${overallProgress}%` }}
-                  transition={{ duration: 0.5, ease: "easeOut" }}
-                  className="gradient-progress h-2 rounded-full"
-                />
-              </div>
-            </div>
-          </motion.div>
+          <SummaryStatsCard files={files} />
         )}
 
         {/* Main Upload Feature */}
-        <MainFeature
+        <FileUploadSection
           files={files}
           setFiles={setFiles}
           isDragging={isDragging}
@@ -150,37 +115,10 @@ function Home() {
         />
 
         {/* Confetti Animation */}
-        <AnimatePresence>
-          {showConfetti && (
-            <div className="fixed inset-0 pointer-events-none z-50">
-              {[...Array(20)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  initial={{
-                    x: Math.random() * window.innerWidth,
-                    y: -20,
-                    rotate: 0,
-                    scale: 1
-                  }}
-                  animate={{
-                    y: window.innerHeight + 20,
-                    rotate: 360,
-                    scale: 0
-                  }}
-                  transition={{
-                    duration: 3,
-                    delay: i * 0.1,
-                    ease: "easeOut"
-                  }}
-                  className="absolute w-3 h-3 gradient-secondary rounded-full"
-                />
-              ))}
-            </div>
-          )}
-        </AnimatePresence>
+        <ConfettiAnimation showConfetti={showConfetti} />
       </motion.div>
     </div>
   );
-}
+};
 
-export default Home;
+export default HomePage;
