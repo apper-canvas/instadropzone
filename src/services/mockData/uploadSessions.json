@@ -1,0 +1,16 @@
+[
+  {
+    "id": "session_1",
+    "files": ["1", "2", "3"],
+    "totalSize": 6577600,
+    "startTime": "2024-01-15T09:00:00Z",
+    "endTime": "2024-01-15T10:30:00Z"
+  },
+  {
+    "id": "session_2",
+    "files": ["4", "5"],
+    "totalSize": 16650240,
+    "startTime": "1/15/2024 11:00:00 AMZ",
+    "endTime": null
+  }
+]
